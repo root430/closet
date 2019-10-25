@@ -1,0 +1,58 @@
+module Divesion(Clk,Start,Done,a,b,c,d);
+	input Clk,Start;
+	input[3:0] a;
+	input[3:0] b;
+	
+	output reg Done;
+	output reg[3:0] c;
+	output reg[3:0] d;
+	
+	reg[3:0] temp;
+	reg Flag;
+	    always @(posedge Clk)
+        begin
+            if(Start)
+                begin
+                    Flag <= 1;
+                    Done <= 0;
+                    temp[3:0] <= a[3:0];
+                    c[3:0] <= 4'b0;d[3:0] <= 4'b0;
+                end
+            if((a[3:0] == 4'b0)&&(b[3:0] == 4'b0))
+                begin
+                    Done <= 0;
+                end
+            if((a[3:0] < b[3:0])&&(Done == 0)&&(Flag == 1))
+                begin
+                    c[3:0] <= 4'b0;
+                    d[3:0] <= a[3:0];
+                    Done <= 1;
+                    Flag <= 0;
+                end
+            if((a[3:0] == b[3:0])&&(Done == 0)&&(Flag == 1))
+                begin
+                    c[3:0] <= 4'b0001;
+                    d[3:0] <= 4'b0;
+                    Done <= 1;
+                    Flag <= 0;
+                end
+            if((b[3:0] == 4'b0)&&(Done == 0)&&(Flag == 1))
+                begin
+                    c[3:0] <= 4'b1111;
+                    d[3:0] <= 4'b1111;
+                    Done <= 1;
+                    Flag <= 0;
+                end
+            if((temp[3:0] >= b[3:0])&&(Done == 0)&&(Flag == 1))
+                begin
+                    temp[3:0] <= temp[3:0]-b[3:0];
+                    c[3:0] <= c[3:0] + 1;
+                end
+            if((temp[3:0] < b[3:0])&&(Done == 0)&&(Flag == 1))
+                begin
+                    d[3:0] <= temp[3:0];
+                    Done <= 1;
+                    Flag <= 0;
+                end
+        end
+endmodule
